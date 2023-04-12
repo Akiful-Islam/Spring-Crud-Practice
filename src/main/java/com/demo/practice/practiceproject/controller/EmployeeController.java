@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/employees")
 public class EmployeeController {
     private EmployeeService employeeService;
 
@@ -15,12 +15,12 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employees")
+    @GetMapping
     public List<Employee> findAllEmployees() {
         return employeeService.findAll();
     }
 
-    @GetMapping("/employees/{id}")
+    @GetMapping("/{id}")
     public Employee findEmployeeById(@PathVariable int id) {
         Employee employee = employeeService.findById(id);
         if (employee == null) {
@@ -29,13 +29,13 @@ public class EmployeeController {
         return employee;
     }
 
-    @PostMapping("/employees")
+    @PostMapping
     public Employee addEmployee(@RequestBody Employee employee) {
         employee.setId(0);
         return employeeService.save(employee);
     }
 
-    @PutMapping("/employees/{id}")
+    @PutMapping("/{id}")
     public Employee updateEmployee(@RequestBody Employee employee, @PathVariable int id) {
         Employee dbEmployee = employeeService.findById(id);
         if (dbEmployee == null) {
@@ -47,7 +47,7 @@ public class EmployeeController {
         return employeeService.save(dbEmployee);
     }
 
-    @DeleteMapping("/employees/{id}")
+    @DeleteMapping("/{id}")
     public String deleteEmployee(@PathVariable int id) {
         Employee employee = employeeService.findById(id);
         if (employee == null) {

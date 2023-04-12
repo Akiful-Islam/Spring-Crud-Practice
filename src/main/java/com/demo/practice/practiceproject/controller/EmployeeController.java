@@ -23,8 +23,11 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> findAllEmployees() {
-        return employeeService.findAll();
+    public List<Employee> findAllEmployees(@RequestParam(defaultValue = "0") int page,
+                                           @RequestParam(defaultValue = "10") int size,
+                                           @RequestParam(defaultValue = "id") String sortBy,
+                                           @RequestParam(defaultValue = "asc") String sortOrder) {
+        return employeeService.findAll(page, size, sortBy, sortOrder);
     }
 
     @GetMapping("/{id}")

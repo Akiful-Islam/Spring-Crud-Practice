@@ -25,8 +25,10 @@ public class EmployeeDAO {
     }
 
 
-    public List<Employee> findAll() {
+    public List<Employee> findAll(int page, int size, String sortBy, String sortOrder) {
         TypedQuery<Employee> query = entityManager.createQuery("from Employee", Employee.class);
+        query.setFirstResult(size*page);
+        query.setMaxResults(size);
         return query.getResultList();
     }
 

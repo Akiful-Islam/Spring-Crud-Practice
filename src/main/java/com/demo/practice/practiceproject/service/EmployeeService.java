@@ -2,6 +2,8 @@ package com.demo.practice.practiceproject.service;
 
 import com.demo.practice.practiceproject.dao.EmployeeDAO;
 import com.demo.practice.practiceproject.entity.Employee;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +15,13 @@ public class EmployeeService {
 
     private EmployeeDAO employeeDAO;
 
-    @Autowired
     public EmployeeService(EmployeeDAO employeeDAO) {
         this.employeeDAO = employeeDAO;
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Employee Service created");
     }
 
     public List<Employee> findAll() {
@@ -32,5 +38,10 @@ public class EmployeeService {
 
     public void deleteById(int id) {
         employeeDAO.deleteById(id);
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("Employee Service destroyed");
     }
 }

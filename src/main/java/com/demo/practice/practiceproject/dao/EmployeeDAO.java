@@ -1,6 +1,8 @@
 package com.demo.practice.practiceproject.dao;
 
 import com.demo.practice.practiceproject.entity.Employee;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +15,13 @@ import java.util.Optional;
 public class EmployeeDAO {
     private EntityManager entityManager;
 
-    @Autowired
     public EmployeeDAO(EntityManager entityManager) {
         this.entityManager = entityManager;
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Employee DAO created");
     }
 
 
@@ -43,5 +49,10 @@ public class EmployeeDAO {
     public void deleteById(int id) {
         Employee employee = entityManager.find(Employee.class, id);
         entityManager.remove(employee);
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("Employee DAO destroyed");
     }
 }

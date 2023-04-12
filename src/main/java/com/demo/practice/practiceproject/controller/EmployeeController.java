@@ -2,6 +2,8 @@ package com.demo.practice.practiceproject.controller;
 
 import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.service.EmployeeService;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +15,11 @@ public class EmployeeController {
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
+    }
+
+    @PostConstruct
+    public void init() {
+        System.out.println("Employee Controller created");
     }
 
     @GetMapping
@@ -55,5 +62,10 @@ public class EmployeeController {
         }
         employeeService.deleteById(id);
         return "Deleted employee with id: " + id + "\n name: " + employee.getFirstName() + " " + employee.getLastName() + "\n email: " + employee.getEmail();
+    }
+
+    @PreDestroy
+    public void destroy() {
+        System.out.println("Employee Controller destroyed");
     }
 }

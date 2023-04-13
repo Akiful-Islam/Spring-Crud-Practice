@@ -24,9 +24,7 @@ public class EmployeeService {
         System.out.println("Employee Service created");
     }
 
-    public List<Employee> findAll() {
-        return employeeDAO.findAll();
-    }
+    public List<Employee> findAll(int page, int size, String sortBy,String sortOrder) {return employeeDAO.findAll(page,size,sortBy,sortOrder);}
 
     public Employee findById(int id) {
         return employeeDAO.findById(id);

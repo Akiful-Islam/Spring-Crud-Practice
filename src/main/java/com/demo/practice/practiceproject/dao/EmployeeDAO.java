@@ -15,26 +15,22 @@ import java.util.Optional;
 public class EmployeeDAO {
     private EntityManager entityManager;
 
-    public EmployeeDAO(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    public EmployeeDAO(EntityManager entityManager) {this.entityManager = entityManager;}
 
     @PostConstruct
-    public void init() {
-        System.out.println("Employee DAO created");
-    }
-
+    public void init() {System.out.println("Employee DAO created");}
 
     public List<Employee> findAll(int page, int size, String sortBy, String sortOrder) {
-        TypedQuery<Employee> query = entityManager.createQuery("from Employee", Employee.class);
-        query.setFirstResult(size*page);
+        String queryString = "FROM Employee ORDER BY " + sortBy + " " + sortOrder;
+        TypedQuery<Employee> query = entityManager.createQuery(queryString, Employee.class);
+        query.setFirstResult(page * size);
         query.setMaxResults(size);
         return query.getResultList();
     }
 
 
-    public Employee findById(int id) {
 
+    public Employee findById(int id) {
         Optional<Employee> employee = Optional.ofNullable(entityManager.find(Employee.class, id));
         if (employee.isEmpty()) {
             throw new RuntimeException("Employee not found with id: " + id);
@@ -54,7 +50,5 @@ public class EmployeeDAO {
     }
 
     @PreDestroy
-    public void destroy() {
-        System.out.println("Employee DAO destroyed");
-    }
+    public void destroy() { System.out.println("Employee DAO destroyed");}
 }

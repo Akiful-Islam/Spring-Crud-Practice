@@ -4,14 +4,15 @@ import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.service.EmployeeService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/employees")
+@RequestMapping("/api/employees")
 public class EmployeeController {
-    private EmployeeService employeeService;
+    private final EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -23,7 +24,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<Employee> findAllEmployees(@RequestParam(defaultValue = "0") int page,
+    public Page<Employee> findAllEmployees(@RequestParam(defaultValue = "0") int page,
                                            @RequestParam(defaultValue = "10") int size,
                                            @RequestParam(defaultValue = "id") String sortBy,
                                            @RequestParam(defaultValue = "asc") String sortOrder) {

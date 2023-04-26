@@ -41,7 +41,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        String employeeEndPoint = "/employees";
+        String employeeEndPoint = "/api/employees";
         String employeeEndPointWithId = employeeEndPoint +"/**";
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(HttpMethod.GET,employeeEndPoint).hasAnyRole("Info" ,"HR", "Admin")

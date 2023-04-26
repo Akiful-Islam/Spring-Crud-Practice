@@ -11,7 +11,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/employees")
 public class EmployeeController {
-    private final EmployeeService employeeService;
+    private EmployeeService employeeService;
 
     public EmployeeController(EmployeeService employeeService) {
         this.employeeService = employeeService;
@@ -32,7 +32,11 @@ public class EmployeeController {
 
     @GetMapping("/{id}")
     public Employee findEmployeeById(@PathVariable int id) {
-        return employeeService.findById(id);
+        Employee employee = employeeService.findById(id);
+        if (employee == null) {
+            throw new RuntimeException("Employee not found with id: " + id);
+        }
+        return employee;
     }
 
     @PostMapping

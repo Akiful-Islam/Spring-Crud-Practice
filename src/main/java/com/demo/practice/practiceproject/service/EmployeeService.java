@@ -5,10 +5,7 @@ import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.repository.EmployeeRepository;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,14 +26,8 @@ public class EmployeeService {
         System.out.println("Employee Service created");
     }
 
-    public Page<Employee> findAll(int page, int size, String sortBy, String sortOrder) {
-        Sort sort = sortOrder.equals("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        PageRequest pageable = PageRequest.of(page, size, sort);
-        var employeeIterable = employeeRepository.findAll();
-        List<Employee> employees = StreamSupport.stream(employeeIterable.spliterator(), false).toList();
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), employees.size());
-        return new PageImpl<>(employees.subList(start, end), pageable, employees.size());
+    public Page<Employee> findAll(Pageable pageable) {
+        return employeeRepository.findAll(pageable);
     }
 
     public Employee findById(long id) {

@@ -1,6 +1,7 @@
 package com.demo.practice.practiceproject.service;
 
 
+import com.demo.practice.practiceproject.dto.EmployeeDto;
 import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
 import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
@@ -35,8 +36,8 @@ public class EmployeeService {
         return employeeRepository.save(updateFields(existingEmployee, updates));
     }
 
-    public Employee save(Employee employee) {
-        return employeeRepository.save(employee);
+    public Employee save(EmployeeDto employeeDto) {
+        return employeeRepository.save(toEntity(employeeDto));
     }
 
     public void delete(long id) {
@@ -60,6 +61,14 @@ public class EmployeeService {
             }
         });
         return existingEmployee;
+    }
+
+    private Employee toEntity(EmployeeDto employeeDto) {
+        return new Employee(employeeDto.getFirstName(), employeeDto.getLastName(), employeeDto.getEmail());
+    }
+
+    private EmployeeDto toDto(Employee employee) {
+        return new EmployeeDto(employee.getId(), employee.getFirstName(), employee.getLastName(), employee.getEmail());
     }
 
 }

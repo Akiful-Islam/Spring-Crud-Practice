@@ -1,10 +1,12 @@
 package com.demo.practice.practiceproject.controller;
 
+import com.demo.practice.practiceproject.dto.EmployeeDto;
 import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
 import com.demo.practice.practiceproject.exception.ErrorResponse;
 import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
 import com.demo.practice.practiceproject.service.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -39,8 +41,8 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employee));
+    public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employeeDto));
     }
 
     @PatchMapping("/{id}")

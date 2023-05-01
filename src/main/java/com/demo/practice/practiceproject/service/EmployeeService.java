@@ -6,6 +6,7 @@ import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
 import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
 import com.demo.practice.practiceproject.repository.EmployeeRepository;
+import jakarta.validation.Validator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -16,37 +17,31 @@ import java.util.Map;
 public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final Validator validator;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
+    public EmployeeService(EmployeeRepository employeeRepository, Validator validator) {
         this.employeeRepository = employeeRepository;
+        this.validator = validator;
     }
 
-    public Page<Employee> findAll(Pageable pageable) {
-        return employeeRepository.findAll(pageable);
+    public Page<EmployeeDto> findAll(Pageable pageable) {
+        return employeeRepository.findAll(pageable).map(this::toDto);
     }
 
-    public Employee findById(long id) {
-        return employeeRepository.findById(id)
+    public EmployeeDto findById(long id) {
+        var employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+        return toDto(employee);
     }
 
-    public Employee update(Map<String, String> updates, long id) {
+    public EmployeeDto save(EmployeeDto employeeDto) {
+        return toDto(employeeRepository.save(toEntity(employeeDto)));
+    }
+
+    public EmployeeDto update(Map<String, String> updates, long id) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
-        return employeeRepository.save(updateFields(existingEmployee, updates));
-    }
-
-    public Employee save(EmployeeDto employeeDto) {
-        return employeeRepository.save(toEntity(employeeDto));
-    }
-
-    public void delete(long id) {
-        employeeRepository.findById(id).ifPresentOrElse(
-                employee -> employeeRepository.deleteById(id),
-                () -> {
-                    throw new EmployeeNotFoundException("Employee not found with id: " + id);
-                }
-        );
+        return toDto(employeeRepository.save(updateFields(existingEmployee, updates)));
     }
 
     private Employee updateFields(Employee existingEmployee, Map<String, String> updates) {
@@ -60,7 +55,33 @@ public class EmployeeService {
                         throw new InvalidFieldNameException("Employee does not have field: " + key + ". Valid fields are: firstName, lastName, email");
             }
         });
+        var violations = validator.validate(toDto(existingEmployee));
+
+        if (!violations.isEmpty()) {
+            var message = new StringBuilder();
+            for (var violation : violations) {
+                message.append(violation.getMessage()).append(", ");
+            }
+            message.delete(message.length() - 2, message.length());
+            String finalMessage;
+            if (violations.size() > 1) {
+                finalMessage = "Multiple invalid fields: " + message;
+            } else {
+                finalMessage = "Invalid field: " + message;
+            }
+            throw new InvalidFieldNameException(finalMessage);
+        }
         return existingEmployee;
+
+    }
+
+    public void delete(long id) {
+        employeeRepository.findById(id).ifPresentOrElse(
+                employee -> employeeRepository.deleteById(id),
+                () -> {
+                    throw new EmployeeNotFoundException("Employee not found with id: " + id);
+                }
+        );
     }
 
     private Employee toEntity(EmployeeDto employeeDto) {
@@ -72,3 +93,4 @@ public class EmployeeService {
     }
 
 }
+

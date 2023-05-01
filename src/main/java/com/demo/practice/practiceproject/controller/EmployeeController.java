@@ -1,7 +1,6 @@
 package com.demo.practice.practiceproject.controller;
 
 import com.demo.practice.practiceproject.dto.EmployeeDto;
-import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
 import com.demo.practice.practiceproject.exception.ErrorResponse;
 import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
@@ -25,7 +24,7 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Employee>> findAllEmployees(Pageable pageable) {
+    public ResponseEntity<Page<EmployeeDto>> findAllEmployees(Pageable pageable) {
         return ResponseEntity.ok(employeeService.findAll(pageable));
     }
 
@@ -41,7 +40,7 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<Employee> saveEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
+    public ResponseEntity<EmployeeDto> saveEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.save(employeeDto));
     }
 
@@ -73,3 +72,4 @@ public class EmployeeController {
 
     }
 }
+

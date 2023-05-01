@@ -11,11 +11,11 @@ import lombok.*;
 @EqualsAndHashCode
 public class EmployeeDto {
     private int id;
-    @NotEmpty(message = "First name is required.")
+    @NotEmpty(message = "First name is required")
     private String firstName;
-    @NotEmpty(message = "Last name is required.")
+    @NotEmpty(message = "Last name is required")
     private String lastName;
-    @NotEmpty(message = "Email is required.")
-    @Email(message = "Email is invalid.")
+    @NotEmpty(message = "Email is required")
+    @Email(message = "Email format invalid")
     private String email;
 }

@@ -55,7 +55,8 @@ public class EmployeeService {
                 case "lastName" -> existingEmployee.setLastName(value);
                 case "email" -> existingEmployee.setEmail(value);
                 case "id" -> throw new InvalidFieldNameException("Cannot update id field");
-                default -> throw new InvalidFieldNameException("Invalid field name: " + key);
+                default ->
+                        throw new InvalidFieldNameException("Employee does not have field: " + key + ". Valid fields are: firstName, lastName, email");
             }
         });
         return existingEmployee;

@@ -2,12 +2,14 @@ package com.demo.practice.practiceproject.service;
 
 
 import com.demo.practice.practiceproject.entity.Employee;
+import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
+import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
 import com.demo.practice.practiceproject.repository.EmployeeRepository;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
+
+import java.util.Map;
 
 @Service
 public class EmployeeService {
@@ -18,37 +20,46 @@ public class EmployeeService {
         this.employeeRepository = employeeRepository;
     }
 
-    @PostConstruct
-    public void init() {
-        System.out.println("Employee Service created");
-    }
-
     public Page<Employee> findAll(Pageable pageable) {
         return employeeRepository.findAll(pageable);
     }
 
     public Employee findById(long id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if (employee.isEmpty()) {
-            throw new RuntimeException("Employee not found with id: " + id);
-        }
-        return employee.get();
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+    }
+
+    public Employee update(Map<String, String> updates, long id) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
+        return employeeRepository.save(updateFields(existingEmployee, updates));
     }
 
     public Employee save(Employee employee) {
         return employeeRepository.save(employee);
     }
 
-    public void deleteById(long id) {
-        Optional<Employee> employee = employeeRepository.findById(id);
-        if (employee.isEmpty()) {
-            throw new RuntimeException("Employee not found with id: " + id);
-        }
-        employeeRepository.deleteById(id);
+    public void delete(long id) {
+        employeeRepository.findById(id).ifPresentOrElse(
+                employee -> employeeRepository.deleteById(id),
+                () -> {
+                    throw new EmployeeNotFoundException("Employee not found with id: " + id);
+                }
+        );
     }
 
-    @PreDestroy
-    public void destroy() {
-        System.out.println("Employee Service destroyed");
+    private Employee updateFields(Employee existingEmployee, Map<String, String> updates) {
+        updates.forEach((key, value) -> {
+            switch (key) {
+                case "firstName" -> existingEmployee.setFirstName(value);
+                case "lastName" -> existingEmployee.setLastName(value);
+                case "email" -> existingEmployee.setEmail(value);
+                case "id" -> throw new InvalidFieldNameException("Cannot update id field");
+                default ->
+                        throw new InvalidFieldNameException("Employee does not have field: " + key + ". Valid fields are: firstName, lastName, email");
+            }
+        });
+        return existingEmployee;
     }
+
 }

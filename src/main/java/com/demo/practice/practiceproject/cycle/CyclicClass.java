@@ -1,14 +1,14 @@
 package com.demo.practice.practiceproject.cycle;
 
-import org.springframework.context.annotation.Lazy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Lazy
 @Component
 public class CyclicClass {
-    private final ClassCyclic classCyclic;
+    private ClassCyclic classCyclic;
 
-    public CyclicClass(ClassCyclic classCyclic) {
+    @Autowired
+    public void setClassCyclic(ClassCyclic classCyclic) {
         this.classCyclic = classCyclic;
     }
 

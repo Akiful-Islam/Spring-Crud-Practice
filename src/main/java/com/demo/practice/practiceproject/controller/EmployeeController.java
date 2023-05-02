@@ -68,6 +68,5 @@ public class EmployeeController {
             var errorResponse = new ErrorResponse(status.toString(), e.getMessage(), "/api/employees/" + id);
             return ResponseEntity.status(status).body(errorResponse);
         }
-
     }
 }

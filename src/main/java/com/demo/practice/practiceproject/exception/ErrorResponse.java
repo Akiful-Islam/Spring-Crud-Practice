@@ -2,21 +2,23 @@ package com.demo.practice.practiceproject.exception;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class ErrorResponse {
-    public String status;
-    public String message;
-    public String path;
-    public LocalDateTime timestamp;
 
-    public ErrorResponse(String status, String message, String path) {
-        this.status = status;
-        this.message = message;
-        this.path = path;
+    public LocalDateTime timestamp;
+    public int code;
+    public String statusMessage;
+    public String errorMessage;
+
+    public ErrorResponse(HttpStatus status, String errorMessage) {
         this.timestamp = LocalDateTime.now();
+        this.code = status.value();
+        this.statusMessage = status.getReasonPhrase();
+        this.errorMessage = errorMessage;
     }
 }

@@ -1,9 +1,6 @@
 package com.demo.practice.practiceproject.controller;
 
 import com.demo.practice.practiceproject.dto.EmployeeDto;
-import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
-import com.demo.practice.practiceproject.exception.ErrorResponse;
-import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
 import com.demo.practice.practiceproject.service.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -29,14 +26,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> findEmployeeById(@PathVariable int id) {
-        try {
-            return ResponseEntity.ok(employeeService.findById(id));
-        } catch (EmployeeNotFoundException e) {
-            var status = HttpStatus.NOT_FOUND;
-            var errorResponse = new ErrorResponse(status.toString(), e.getMessage(), "/api/employees/" + id);
-            return ResponseEntity.status(status).body(errorResponse);
-        }
+    public ResponseEntity<EmployeeDto> findEmployeeById(@PathVariable int id) {
+        return ResponseEntity.ok(employeeService.findById(id));
     }
 
     @PostMapping
@@ -45,31 +36,14 @@ public class EmployeeController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateEmployee(@RequestBody Map<String, String> updates, @PathVariable long id) {
-        try {
-            return ResponseEntity.ok(employeeService.update(updates, id));
-        } catch (InvalidFieldNameException e) {
-            var status = HttpStatus.BAD_REQUEST;
-            var errorResponse = new ErrorResponse(status.toString(), e.getMessage(), "/api/employees/" + id);
-            return ResponseEntity.status(status).body(errorResponse);
-        } catch (EmployeeNotFoundException e) {
-            var status = HttpStatus.NOT_FOUND;
-            var errorResponse = new ErrorResponse(status.toString(), e.getMessage(), "/api/employees/" + id);
-            return ResponseEntity.status(status).body(errorResponse);
-        }
+    public ResponseEntity<EmployeeDto> updateEmployee(@RequestBody Map<String, String> updates, @PathVariable long id) {
+        return ResponseEntity.ok(employeeService.update(updates, id));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable int id) {
-        try {
             employeeService.delete(id);
             return ResponseEntity.noContent().build();
-        } catch (EmployeeNotFoundException e) {
-            var status = HttpStatus.NOT_FOUND;
-            var errorResponse = new ErrorResponse(status.toString(), e.getMessage(), "/api/employees/" + id);
-            return ResponseEntity.status(status).body(errorResponse);
-        }
-
     }
 }
 

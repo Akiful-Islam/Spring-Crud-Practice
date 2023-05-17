@@ -17,18 +17,23 @@ public class Employee {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @NonNull
     @NotEmpty(message = "First name cannot be empty")
     private String firstName;
+    @NonNull
     @NotEmpty(message = "Last name cannot be empty")
     private String lastName;
+    @NonNull
     @NotEmpty(message = "Email cannot be empty")
     @Email(message = "Email format invalid")
     @Column(unique = true)
     private String email;
+    @NonNull
     @NotEmpty(message = "Phone number cannot be empty")
     @Pattern(regexp = "^\\d{11}$", message = "Phone number must only contain 11 digits")
     @Column(unique = true)
     private String phoneNumber;
+    @NonNull
     @NotEmpty(message = "Position is required")
     @Enumerated(EnumType.STRING)
     private Position position;

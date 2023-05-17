@@ -90,11 +90,23 @@ public class EmployeeService {
 
 
     private Employee toEntity(EmployeeDto employeeDto) {
-        return new Employee(employeeDto.getFirstName(), employeeDto.getLastName(), employeeDto.getEmail());
-    }
+        return new Employee(
+                employeeDto.firstName(),
+                employeeDto.lastName(),
+                employeeDto.email(),
+                employeeDto.phoneNumber(),
+                employeeDto.position()
+        );}
 
     private EmployeeDto toDto(Employee employee) {
-        return new EmployeeDto(employee.getId(), employee.getFirstName(), employee.getLastName(), employee.getEmail());
+        return new EmployeeDto(
+                employee.getId(),
+                employee.getFirstName(),
+                employee.getLastName(),
+                employee.getEmail(),
+                employee.getPhoneNumber(),
+                employee.getPosition()
+        );
     }
 
 }

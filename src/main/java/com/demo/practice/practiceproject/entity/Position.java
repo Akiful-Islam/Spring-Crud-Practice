@@ -1,8 +1,8 @@
 package com.demo.practice.practiceproject.entity;
 
 public enum Position {
-    DEVELOPER,
+    Developer,
     QA,
-    MANAGER,
+    Manager,
     HR
 }

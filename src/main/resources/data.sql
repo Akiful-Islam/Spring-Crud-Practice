@@ -98,4 +98,4 @@ VALUES ('Hamil01', 'Shinjo100', 'hanzou01100@dotcom.com', '019969101999', 'Devel
        ('Hamil97', 'Shinjo04', 'hanzou9704@dotcom.com', '010369197903', 'Developer'),
        ('Hamil98', 'Shinjo03', 'hanzou9803@dotcom.com', '010269198902', 'Developer'),
        ('Hamil99', 'Shinjo02', 'hanzou9902@dotcom.com', '010169199901', 'QA'),
-       ('Hamil100', 'Shinjo01', 'hanzou10001@dotcom.com', '01006920000', 'HR');
+       ('Hamil100', 'Shinjo01', 'hanzou10001@dotcom.com', '01698008420', 'HR');

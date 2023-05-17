@@ -3,6 +3,7 @@ package com.demo.practice.practiceproject.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
@@ -34,7 +35,7 @@ public class Employee {
     @Column(unique = true)
     private String phoneNumber;
     @NonNull
-    @NotEmpty(message = "Position is required")
+    @NotNull(message = "Position is required")
     @Enumerated(EnumType.STRING)
     private Position position;
 }

@@ -3,6 +3,7 @@ package com.demo.practice.practiceproject.service;
 
 import com.demo.practice.practiceproject.dto.EmployeeDto;
 import com.demo.practice.practiceproject.entity.Employee;
+import com.demo.practice.practiceproject.entity.Position;
 import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
 import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
 import com.demo.practice.practiceproject.repository.EmployeeRepository;
@@ -58,6 +59,8 @@ public class EmployeeService {
                 case "firstName" -> existingEmployee.setFirstName(value);
                 case "lastName" -> existingEmployee.setLastName(value);
                 case "email" -> existingEmployee.setEmail(value);
+                case "phoneNumber" -> existingEmployee.setPhoneNumber(value);
+                case "position" -> existingEmployee.setPosition(Position.valueOf(value));
                 case "id" -> throw new InvalidFieldNameException("Cannot update id field");
                 default ->
                         throw new InvalidFieldNameException("Employee does not have field: " + key + ". Valid fields are: firstName, lastName, email");

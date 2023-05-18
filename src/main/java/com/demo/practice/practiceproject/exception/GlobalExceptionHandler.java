@@ -25,6 +25,20 @@ public class GlobalExceptionHandler {
         var errorResponse = new ErrorResponse(status, e.getMessage());
         return ResponseEntity.status(status).body(errorResponse);
     }
+
+    @ExceptionHandler(UniqueFieldExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUniqueFieldExistsException(UniqueFieldExistsException e) {
+        var status = HttpStatus.BAD_REQUEST;
+        var errorResponse = new ErrorResponse(status, e.getMessage());
+        return ResponseEntity.status(status).body(errorResponse);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
+        var status = HttpStatus.BAD_REQUEST;
+        var errorResponse = new ErrorResponse(status, e.getMessage());
+        return ResponseEntity.status(status).body(errorResponse);
+    }
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();

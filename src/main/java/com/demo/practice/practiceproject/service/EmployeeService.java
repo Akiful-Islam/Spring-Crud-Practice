@@ -6,6 +6,7 @@ import com.demo.practice.practiceproject.entity.Employee;
 import com.demo.practice.practiceproject.entity.Position;
 import com.demo.practice.practiceproject.exception.EmployeeNotFoundException;
 import com.demo.practice.practiceproject.exception.InvalidFieldNameException;
+import com.demo.practice.practiceproject.exception.UniqueFieldExistsException;
 import com.demo.practice.practiceproject.repository.EmployeeRepository;
 import jakarta.validation.Validator;
 import org.springframework.data.domain.Page;
@@ -36,6 +37,12 @@ public class EmployeeService {
     }
 
     public EmployeeDto save(EmployeeDto employeeDto) {
+        if (employeeRepository.existsByEmail(employeeDto.email())) {
+            throw new UniqueFieldExistsException("Employee with email: " + employeeDto.email() + " already exists");
+        }
+        if (employeeRepository.existsByPhoneNumber(employeeDto.phoneNumber())) {
+            throw new UniqueFieldExistsException("Employee with phone number: " + employeeDto.phoneNumber() + " already exists");
+        }
         return toDto(employeeRepository.save(toEntity(employeeDto)));
     }
 
@@ -58,12 +65,24 @@ public class EmployeeService {
             switch (key) {
                 case "firstName" -> existingEmployee.setFirstName(value);
                 case "lastName" -> existingEmployee.setLastName(value);
-                case "email" -> existingEmployee.setEmail(value);
-                case "phoneNumber" -> existingEmployee.setPhoneNumber(value);
+                case "email" -> {
+                    if (employeeRepository.existsByEmail(value)) {
+                        throw new UniqueFieldExistsException("Employee with email: " + value + " already exists");
+                    } else {
+                        existingEmployee.setEmail(value);
+                    }
+                }
+                case "phoneNumber" -> {
+                    if (employeeRepository.existsByPhoneNumber(value)) {
+                        throw new UniqueFieldExistsException("Employee with phone number: " + value + " already exists");
+                    } else {
+                        existingEmployee.setPhoneNumber(value);
+                    }
+                }
                 case "position" -> existingEmployee.setPosition(Position.valueOf(value));
                 case "id" -> throw new InvalidFieldNameException("Cannot update id field");
                 default ->
-                        throw new InvalidFieldNameException("Employee does not have field: " + key + ". Valid fields are: firstName, lastName, email");
+                        throw new InvalidFieldNameException("Employee does not have field: " + key + ". Valid fields are: firstName, lastName, email, phoneNumber and position");
             }
         });
         validateFields(toDto(existingEmployee));

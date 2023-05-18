@@ -21,7 +21,19 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<EmployeeDto>> findAllEmployees(Pageable pageable) {
+    public ResponseEntity<Page<EmployeeDto>> findAllEmployees(@RequestParam(required = false) String name,
+                                                              @RequestParam(required = false) String phoneNumber,
+                                                              Pageable pageable) {
+
+        if (name != null && phoneNumber != null) {
+            throw new IllegalArgumentException("Only one of Name or Phone Number can be provided");
+        }
+        if (name != null) {
+            return ResponseEntity.ok(employeeService.findByName(name, pageable));
+        }
+        if (phoneNumber != null) {
+            return ResponseEntity.ok(employeeService.findByPhoneNumber(phoneNumber, pageable));
+        }
         return ResponseEntity.ok(employeeService.findAll(pageable));
     }
 
@@ -42,8 +54,8 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteEmployee(@PathVariable int id) {
-            employeeService.delete(id);
-            return ResponseEntity.noContent().build();
+        employeeService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
 

@@ -30,6 +30,16 @@ public class EmployeeService {
         return employeeRepository.findAll(pageable).map(this::toDto);
     }
 
+    public Page<EmployeeDto> findByName(String name, Pageable pageable) {
+        return employeeRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(name, name, pageable)
+                .map(this::toDto);
+    }
+
+    public Page<EmployeeDto> findByPhoneNumber(String phoneNumber, Pageable pageable) {
+        return employeeRepository.findByPhoneNumberContaining(phoneNumber, pageable)
+                .map(this::toDto);
+    }
+
     public EmployeeDto findById(long id) {
         var employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EmployeeNotFoundException("Employee not found with id: " + id));
